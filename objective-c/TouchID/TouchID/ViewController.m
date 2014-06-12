@@ -7,10 +7,9 @@
 //
 
 #import "ViewController.h"
-@import LocalAuthentication
+#import <LocalAuthentication/LocalAuthentication.h>
 
 @interface ViewController ()
-            
 
 @end
 
@@ -30,18 +29,27 @@
     if ([myContext canEvaluatePolicy:LAPolicyDeviceOwnerAuthenticationWithBiometrics error:&authError]) {
         [myContext evaluatePolicy:LAPolicyDeviceOwnerAuthenticationWithBiometrics
                   localizedReason:myLocalizedReasonString
-                            reply:^(BOOL succes, NSError *error) {
+                            reply:^(BOOL success, NSError *error) {
                                 if (success) {
                                     // User authenticated successfully, take appropriate action
                                     NSLog(@"authentication success");
+                                    if (!success) {
+                                        NSLog(@"%@", error);
+                                    }
                                 } else {
                                     // User did not authenticate successfully, look at error and take appropriate action
                                     NSLog(@"authentication failed");
+                                    if (!success) {
+                                        NSLog(@"%@", error);
+                                    }
                                 }
                             }];
     } else {
         // Could not evaluate policy; look at authError and present an appropriate message to user
         NSLog(@"an error occured");
+        if (!success) {
+            NSLog(@"%@", error);
+        }
     }
 }
 
